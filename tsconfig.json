@@ -13,7 +13,8 @@
     "baseUrl": "./",
     "types": ["@types/resize-observer-browser"],
     "paths": {
-      "src/*": ["./src/*"]
+      "src/*": ["./src/*"],
+      "monaco-editor/*": ["./node_modules/monaco-editor/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],

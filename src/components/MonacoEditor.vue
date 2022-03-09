@@ -17,7 +17,6 @@ import { onMounted, ref, onUnmounted } from 'vue';
 import * as monaco from 'monaco-editor';
 
 // currently just chrome supports the way vite uses workers in dev mode
-/* eslint-disable import/no-unresolved */
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 import CssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker';
@@ -25,7 +24,6 @@ import HtmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker';
 import TsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
 
 import setupResizeHandler from 'src/composables/resizeHandler';
-/* eslint-enable import/no-unresolved */
 
 window.MonacoEnvironment = {
     getWorker(_, label) {
@@ -40,8 +38,9 @@ window.MonacoEnvironment = {
                 return new TsWorker();
             default: return new EditorWorker();
         }
-    },
+    }
 };
+
 const monacoContainer = ref<HTMLDivElement | null>(null);
 const resizeHandle = ref<HTMLDivElement | null>(null);
 
