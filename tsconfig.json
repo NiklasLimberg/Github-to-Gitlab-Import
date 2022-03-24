@@ -13,10 +13,11 @@
     "baseUrl": "./",
     "types": ["@types/resize-observer-browser"],
     "paths": {
-      "src/*": ["./src/*"],
-      "monaco-editor/*": ["./node_modules/monaco-editor/*"]
+      "@": ["./"],
+      "client-components/*": ["./client-components/*"],
+      "@/monaco-editor/*": ["./node_modules/monaco-editor/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
-  "references": [{ "path": "./tsconfig.node.json" }],
+  "exclude": ["./node_modules/*"],
+  "include": ["***.ts", "***.d.ts", "***.tsx", "***.vue"],
 }
