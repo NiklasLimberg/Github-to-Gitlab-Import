@@ -20,12 +20,34 @@
 
 <script setup lang="ts">
 import { onMounted, ref, onUnmounted } from 'vue'
-import type monacoType from 'monaco-editor'
 
+import * as monaco from 'monaco-editor'
+import type monacoType from 'monaco-editor'
 import type { Environment as MonacoEnvironment } from 'monaco-editor/esm/vs/editor/editor.api'
 
 // currently just chrome supports the way vite uses workers in dev mode
-import 'monaco-editor/esm/vs/basic-languages/php/php.contribution.js'
+import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
+import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
+import CssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
+import HtmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
+import TsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
+import 'monaco-editor/esm/vs/basic-languages/php/php.contribution'
+
+window.MonacoEnvironment = {
+  getWorker (_, label) {
+    switch (label) {
+      case 'json':
+        return new JsonWorker()
+      case 'css' || 'scss' || 'less':
+        return new CssWorker()
+      case 'html':
+        return new HtmlWorker()
+      case 'typescript' || 'javascript':
+        return new TsWorker()
+      default: return new EditorWorker()
+    }
+  }
+}
 
 declare global {
   interface Window {
@@ -50,26 +72,6 @@ async function getPRInfo () {
 }
 
 onMounted(async () => {
-  /*
-  window.MonacoEnvironment = {
-    getWorker (_, label) {
-      switch (label) {
-        case 'json':
-          return new Worker('@/node_modules/monaco-editor/esm/vs/language/json/json.worker')
-        case 'css' || 'scss' || 'less':
-          return new Worker('@/node_modules/monaco-editor/esm/vs/language/css/css.worker')
-        case 'html':
-          return new Worker('@/node_modules/monaco-editor/esm/vs/language/html/html.worker')
-        case 'typescript' || 'javascript':
-          return new Worker('@/node_modules/monaco-editor/esm/vs/language/typescript/ts.worker')
-        default: return new Worker('@/node_modules/monaco-editor/esm/vs/editor/editor.worker')
-      }
-    }
-  }
-  */
-
-  const monaco = await import('monaco-editor')
-
   if (monacoContainer.value?.tagName !== 'DIV') {
     return
   }
@@ -103,7 +105,7 @@ onMounted(async () => {
 
   monacoInstance.getLineChanges()
 
-  if (resizeHandle.value) { setupResizeHandler(monacoContainer.value, resizeHandle.value, () => monacoInstance.layout()) }
+  if (resizeHandle.value) { setupResizeHandler(monacoContainer.value, resizeHandle.value, () => monacoInstance?.layout()) }
 })
 
 onUnmounted(() => {

@@ -12,12 +12,6 @@
     "lib": ["esnext", "dom"],
     "baseUrl": "./",
     "types": ["@types/resize-observer-browser"],
-    "paths": {
-      "@": ["./"],
-      "client-components/*": ["./client-components/*"],
-      "@/monaco-editor/*": ["./node_modules/monaco-editor/*"]
-    }
   },
-  "exclude": ["./node_modules/*"],
-  "include": ["***.ts", "***.d.ts", "***.tsx", "***.vue"],
+  "extends": "./.nuxt/tsconfig.json"
 }

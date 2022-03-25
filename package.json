@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "nuxi dev",
     "build": "nuxi build",
-    "start": "nuxi start",
+    "start": "node .output/server/index.mjs",
+    "typecheck": "nuxi typecheck",
     "lint": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint-fix": "eslint --ext \".js,.vue\" --fix --ignore-path .gitignore ."
   },
@@ -15,9 +16,9 @@
     "@types/resize-observer-browser": "^0.1.7",
     "axios": "^0.26.1",
     "execa": "^6.1.0",
-    "monaco-editor": "^0.32.1",
-    "nuxt3": "^3.0.0-27466220.7c0d2e1",
-    "uuid": "^8.3.2"
+    "monaco-editor": "^0.33.0",
+    "uuid": "^8.3.2",
+    "vue-tsc": "^0.33.7"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config-typescript": "^9.0.0",
@@ -28,6 +29,7 @@
     "eslint-import-resolver-typescript": "^2.5.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-vue": "^8.5.0",
+    "nuxt3": "v3.0.0-27465767.70f067a",
     "sass": "^1.49.9",
     "typescript": "^4.6.2",
     "vite-plugin-eslint": "^1.3.0"
