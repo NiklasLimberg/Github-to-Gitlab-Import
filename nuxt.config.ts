@@ -9,13 +9,15 @@ export default defineNuxtConfig({
     '@': '/<rootDir>',
     assets: '/<rootDir>/assets',
     public: '/<rootDir>/public',
-    '@/monaco-editor': '/<rootDir>/node_modules/monaco-editor'
   },
   ssr: false,
   vite: {
     plugins: [
       eslintPlugin()
     ]
+  },
+  privateRuntimeConfig: {
+    GITHUB_API_TOKEN: process.env.GITHUB_API_TOKEN
   },
   typescript: {
     strict: true

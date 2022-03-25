@@ -23,7 +23,6 @@ import { onMounted, ref, onUnmounted } from 'vue'
 
 import * as monaco from 'monaco-editor'
 import type monacoType from 'monaco-editor'
-import type { Environment as MonacoEnvironment } from 'monaco-editor/esm/vs/editor/editor.api'
 
 // currently just chrome supports the way vite uses workers in dev mode
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
@@ -36,22 +35,16 @@ import 'monaco-editor/esm/vs/basic-languages/php/php.contribution'
 window.MonacoEnvironment = {
   getWorker (_, label) {
     switch (label) {
-      case 'json':
-        return new JsonWorker()
-      case 'css' || 'scss' || 'less':
-        return new CssWorker()
-      case 'html':
-        return new HtmlWorker()
-      case 'typescript' || 'javascript':
-        return new TsWorker()
-      default: return new EditorWorker()
+    case 'json':
+      return new JsonWorker()
+    case 'css' || 'scss' || 'less':
+      return new CssWorker()
+    case 'html':
+      return new HtmlWorker()
+    case 'typescript' || 'javascript':
+      return new TsWorker()
+    default: return new EditorWorker()
     }
-  }
-}
-
-declare global {
-  interface Window {
-    MonacoEnvironment: MonacoEnvironment
   }
 }
 

@@ -1,0 +1,13 @@
+mutation addPullRequestLabel($issueID: ID!, $labelIDs: [ID!]!) {
+  addLabelsToLabelable(input: {labelableId: $issueID, labelIds: $labelIDs } ) {
+    labelable {
+      labels(last: 10) {
+        edges {
+          node {
+            id
+          }
+        }
+      }
+    }
+  }
+}

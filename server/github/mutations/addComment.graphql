@@ -1,0 +1,8 @@
+mutation addComment($issueID: ID!, $body: String!) {
+    addComment(input: {subjectId: $issueID, body: $body}) {
+       subject {
+         __typename
+         id
+       }
+    }
+}

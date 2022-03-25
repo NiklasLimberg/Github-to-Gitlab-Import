@@ -1,0 +1,13 @@
+overwrite: true
+schema: "server/github/github-schema-loader.js"
+generates:
+  server/github/generated/graphql.ts:
+    plugins:
+      - "typescript"
+      - "typescript-resolvers"
+      - "typescript-document-nodes"
+      - "typescript-operations"
+documents:
+  - server/github/queries/*.graphql
+  - server/github/mutations/*.graphql
+

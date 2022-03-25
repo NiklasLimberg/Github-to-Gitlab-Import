@@ -1,10 +1,10 @@
 import { Axios } from "axios";
-import mappings from "./mappings";
+import { mappings, mappingKeys } from "./mappings";
 
 export default class JiraAdapter {
-    #apiClient = undefined as Axios
+    #apiClient: Axios
 
-    constructor(host, username: string, password: string) {
+    constructor(host: string, username: string, password: string) {
         this.#apiClient = new Axios({
             baseURL: host,
             auth: {
@@ -20,7 +20,11 @@ export default class JiraAdapter {
     }
 
     #getProjectID(projectName: string) {
-        return mappings[projectName].jiraIssueKey
+        if(!Object.keys(mappings).includes(projectName)) {
+            throw new Error(`[jira] can't find mapping for ${projectName}`)
+        }
+
+        return mappings[projectName as mappingKeys].jiraIssueKey
     }
 
     async createTicket(projectName: string, user: {email: string, team: string}, pr: {author: string, description: string, htmlURL: string}) {

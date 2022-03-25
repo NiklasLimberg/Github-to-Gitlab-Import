@@ -1,5 +1,5 @@
 import { Axios } from 'axios';
-import mappings from  './mappings';
+import {mappings, mappingKeys} from  './mappings';
 
 // Schema translated from https://docs.gitlab.com/ee/api/merge_requests.html#create-mr
 interface MergeRequestSchema {
@@ -14,7 +14,7 @@ interface MergeRequestSchema {
 }
 
 export default class GitlabAdapter {
-    #axios = undefined as Axios
+    #axios: Axios
 
     constructor(baseURL: string, authToken: string) {
         this.#axios = new Axios({
@@ -28,7 +28,11 @@ export default class GitlabAdapter {
     }
 
     #getGitlabProjectID(projectName: string) {
-        return mappings[projectName].gitlabProjectID
+        if(!Object.keys(mappings).includes(projectName)) {
+            throw new Error(`[Gitlab] can't find mapping for ${projectName}`)
+        }
+        
+        return mappings[projectName as mappingKeys].gitlabProjectID
     }
 
     async createGitlabMergeRequest(pullRequest: {
@@ -36,9 +40,9 @@ export default class GitlabAdapter {
             title: string,
             description: string,  
             targetBranch: string,
-            projectName: string,
             githubURL: string,
             localeBranchName: string
+            projectName: string
         }, labels: string[]) {
         // todo strip tags
         const description = `${pullRequest.description}\n\n> Jira: https://shopware.atlassian.net/browse/${pullRequest.jiraIssue}\n> Github-PR: ${pullRequest.githubURL}`
@@ -48,7 +52,8 @@ export default class GitlabAdapter {
             description,
             source_branch: pullRequest.localeBranchName,
             target_branch: pullRequest.targetBranch,
-            labels: labels ?? 'github',
+            target_project_id: this.#getGitlabProjectID(pullRequest.projectName),
+            labels: labels?.join(',') ?? 'github',
             remove_source_branch: false,
             squash: false
         } as MergeRequestSchema);

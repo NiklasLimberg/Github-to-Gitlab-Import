@@ -13,5 +13,6 @@
     "baseUrl": "./",
     "types": ["@types/resize-observer-browser"],
   },
+  "files": ["./index.d.ts"],
   "extends": "./.nuxt/tsconfig.json"
 }

@@ -4,7 +4,7 @@ import { sep } from 'path'
 import { Stream } from 'stream'
 import { v4 as uuidv4 } from 'uuid'
 import { execa } from 'execa'
-import mappings from './mappings'
+import { mappings, mappingKeys } from './mappings'
 
 export default class GitAdapter {
   #tmpDir: string
@@ -17,8 +17,12 @@ export default class GitAdapter {
     this.#abortSignal = abortSignal
   }
 
-  #getRepositoryRemote (repository: string) {
-    return mappings[repository].gitlabCloneURL
+  #getRepositoryRemote (projectName: string) {
+    if(!Object.keys(mappings).includes(projectName)) {
+      throw new Error(`[Gitlab] can't find mapping for ${projectName}`)
+    }
+  
+    return mappings[projectName as mappingKeys].gitlabCloneURL
   }
 
   async #runGitCommand (gitArgs: string[], errorMessage?: string) {

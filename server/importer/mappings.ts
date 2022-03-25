@@ -1,4 +1,4 @@
-export default {
+export const mappings = {
     platform: {
         jiraIssueKey: 'NEXT',
         gitlabProjectID: 1,
@@ -6,12 +6,12 @@ export default {
     },
     development: {
         jiraIssueKey: 'NEXT',
-        GitlabProjectID: 8,
+        gitlabProjectID: 8,
         gitlabCloneURL: 'git@gitlab.shopware.com:shopware/6/product/development.git',
     },
     production: {
         jiraIssueKey: 'NEXT',
-        GitlabProjectID: 184,
+        gitlabProjectID: 184,
         gitlabCloneURL: 'git@gitlab.shopware.com:shopware/6/product/production.git',
     },
     shopware: {
@@ -19,5 +19,6 @@ export default {
         gitlabProjectID: 54,
         gitlabCloneURL: 'git@gitlab.shopware.com:shopware/5/product/shopware.git',
     },
+};
 
-} 
+export type mappingKeys = 'platform' | 'development' | 'production' | 'shopware';

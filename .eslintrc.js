@@ -6,19 +6,21 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
-    'plugin:vue/essential',
+    'plugin:vue/vue3-recommended',
     'plugin:@typescript-eslint/recommended',
-    '@nuxtjs/eslint-config-typescript'
   ],
+  parser: "vue-eslint-parser",
   parserOptions: {
-    ecmaVersion: 'latest',
-    parser: '@typescript-eslint/parser',
-    sourceType: 'module'
+    parser: "@typescript-eslint/parser",
+    sourceType: "module"
   },
   settings: {
     'import/resolver': {
       typescript: {}
     }
   },
-  rules: {}
+  rules: { 
+    indent: ['error', 2],
+    //'no-undef': 0
+  },
 }
