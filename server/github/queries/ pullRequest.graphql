@@ -50,7 +50,103 @@ fragment PullRequestInformation on PullRequest {
   timelineItems(last: 20) {
     edges {
       node {
-        ...PullRequestTimelineNodes
+        ... on IssueComment {
+          __typename
+          author {
+            login
+          }
+        }
+        ... on PullRequestCommit {
+          __typename
+          commit {
+            authoredDate
+            author {
+              user {
+                login
+              }
+            }
+          }
+        }
+        ... on HeadRefForcePushedEvent {
+          __typename
+          createdAt
+          actor {
+            login
+          }
+        }
+        ... on RenamedTitleEvent {
+          __typename
+          actor {
+            login
+          }
+        }
+        ... on PullRequestCommitCommentThread {
+          __typename
+          comments(last: 10) {
+            edges {
+              node {
+                updatedAt
+                author {
+                  login
+                }
+              }
+            }
+          }
+        }
+        ... on PullRequestReview {
+          __typename
+          updatedAt
+          author {
+            login
+          }
+        }
+        ... on PullRequestReviewThread {
+          __typename
+          comments(last: 10) {
+            totalCount
+            edges {
+              node {
+                ... on PullRequestReviewComment {
+                  updatedAt
+                  author {
+                    login
+                  }
+                }
+              }
+            }
+          }
+        }
+        ... on LabeledEvent {
+          __typename
+          actor {
+            login
+          }
+        }
+        ... on UnlabeledEvent {
+          __typename
+          actor {
+            login
+          }
+        }
+        ... on AssignedEvent {
+          __typename
+          actor {
+            login
+          }
+        }
+        ... on UnassignedEvent {
+          __typename
+          createdAt
+          actor {
+            login
+          }
+        }
+        ... on ConvertToDraftEvent {
+          __typename
+          actor {
+            login
+          }
+        }
       }
     }
   }
@@ -63,7 +159,7 @@ fragment PullRequestInformation on PullRequest {
     }
   }
   state
-  labels(first:6) {
+  labels(first: 6) {
     edges {
       node {
         id
@@ -74,104 +170,6 @@ fragment PullRequestInformation on PullRequest {
   }
 }
 
-fragment PullRequestTimelineNodes on PullRequestTimelineItems {
-  __typename
-  ... on IssueComment {
-    __typename
-    author {
-      login
-    }
-  }
-  ... on PullRequestCommit {
-    __typename
-    commit {
-      authoredDate
-      author {
-        user {
-          login
-        }
-      }
-    }
-  }
-  ... on HeadRefForcePushedEvent {
-    __typename
-    createdAt
-    actor {login}
-  }
-  ... on RenamedTitleEvent {
-    __typename
-    actor {
-      login
-    }
-  }
-  ... on PullRequestCommitCommentThread {
-    __typename
-    comments(last: 10) {
-      edges {
-        node {
-          updatedAt
-          author {
-            login
-          }
-        }
-      }
-    }
-  }
-  ... on PullRequestReview {
-    __typename
-    updatedAt
-    author {
-      login
-    }
-  }
-  ... on PullRequestReviewThread {
-    __typename
-    comments(last: 10) {
-      totalCount
-      edges {
-        node {
-          ... on PullRequestReviewComment {
-            updatedAt
-            author {
-              login
-            }
-          }
-        }
-      }
-    }
-  }
-  ... on LabeledEvent {
-    __typename
-    actor {
-      login
-    }
-  }
-  ... on UnlabeledEvent {
-    __typename
-    actor {
-      login
-    }
-  }
-  ... on AssignedEvent {
-    __typename
-    actor {
-      login
-    }
-  }
-  ... on UnassignedEvent {
-    __typename
-    createdAt
-    actor {
-      login
-    }
-  }
-  ... on ConvertToDraftEvent {
-    __typename
-    actor {
-      login
-    }
-  }
-}
 fragment RateLimitInfo on RateLimit {
   cost
   used

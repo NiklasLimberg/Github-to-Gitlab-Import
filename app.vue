@@ -4,7 +4,9 @@
       rel="stylesheet"
       href="/assets/css/main.scss"
     >
-    <NuxtPage class="page-container" />
+    <div class="page-container">
+      <NuxtPage />
+    </div>
   </div>
 </template>
 
@@ -13,9 +15,9 @@ import "@fontsource/inter";
 
 const currentTheme = localStorage.getItem("theme");
 if (currentTheme === "dark") {
-  document.body.classList.toggle("dark-mode");
+    document.body.classList.toggle("dark-mode");
 } else if (currentTheme === "light") {
-  document.body.classList.toggle("light-mode");
+    document.body.classList.toggle("light-mode");
 }
 </script>
 

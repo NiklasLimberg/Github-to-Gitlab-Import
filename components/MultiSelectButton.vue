@@ -5,7 +5,7 @@
       aria-haspopup="true"
       @click="isOpen = !isOpen"
     >
-      {{ props.buttonText }}
+      {{ props.title }}
       <icon-chevron-down />
     </button>
     <div
@@ -14,14 +14,19 @@
       :class="isOpen ? 'open' : 'closed'"
       aria-label="submenu"
     >
-      <search-bar class="search-container" />
+      <search-bar
+        :model-value="props.searchTerm"
+        class="search-container"
+        @update:model-value="emit('search', $event)"
+      />
       <ul>
         <li
-          v-for="option in options"
+          v-for="option in props.options"
           :key="option.name"
+          @click="emit('optionClick', option.id)"
         >
           <span>{{ option.name }}</span>
-          <icon-check v-if="option.selected" />
+          <icon-check v-if="props.selection.includes(option.id)" />
         </li>
       </ul>
     </div>
@@ -32,24 +37,34 @@
 import { onClickOutside } from '@vueuse/core'
 
 interface Option {
-  name: string,
-  selected: boolean
+  id: string,
+  name: string
 }
 
 interface Props {
-  buttonText: string
-  options: Option[]
-  hasSearch?: boolean
+  title: string
+  options?: Option[],
+  selection?: string[],
+  hasSearch?: boolean,
+  searchTerm?: string
 }
 
 const target = ref(null)
 const isOpen = ref(false);
 
-onClickOutside(target, () => isOpen.value = false)
-
 const props = withDefaults(defineProps<Props>(), {
-  hasSearch: true
+    selection: () => [],
+    options: () => [],
+    hasSearch: true,
+    searchTerm: ''
 })
+
+const emit = defineEmits<{
+  (e: 'optionClick', value: string): void,
+  (e: 'search', value: string): void
+}>()
+
+onClickOutside(target, () => isOpen.value = false)
 </script>
 
 

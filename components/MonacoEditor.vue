@@ -40,19 +40,19 @@ import TsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 import 'monaco-editor/esm/vs/basic-languages/php/php.contribution'
 
 window.MonacoEnvironment = {
-  getWorker (_, label) {
-    switch (label) {
-    case 'json':
-      return new JsonWorker()
-    case 'css' || 'scss' || 'less':
-      return new CssWorker()
-    case 'html':
-      return new HtmlWorker()
-    case 'typescript' || 'javascript':
-      return new TsWorker()
-    default: return new EditorWorker()
+    getWorker (_, label) {
+        switch (label) {
+        case 'json':
+            return new JsonWorker()
+        case 'css' || 'scss' || 'less':
+            return new CssWorker()
+        case 'html':
+            return new HtmlWorker()
+        case 'typescript' || 'javascript':
+            return new TsWorker()
+        default: return new EditorWorker()
+        }
     }
-  }
 }
 
 const monacoContainer = ref<HTMLDivElement | null>(null)
@@ -63,53 +63,53 @@ let monacoDiffNavigator: monacoType.editor.IDiffNavigator | undefined
 
 // this will be moved to the scope of the page
 async function getPRInfo () {
-  const requests = []
-  requests[0] = fetch('https://raw.githubusercontent.com/shopware/platform/01b6568b680e7e3c1dd040e1bc56529a1ff44062/src/Core/Framework/Api/Controller/CacheController.php')
-  requests[1] = fetch('https://raw.githubusercontent.com/shopware/platform/bfa90ba614705a4ea14c1da1deec1b0bbf86f27a/src/Core/Framework/Api/Controller/CacheController.php')
-  const jsonTransforms = (await Promise.all(requests)).map(response => response.text())
-  const [base, modified] = await Promise.all(jsonTransforms)
-  return { base, modified }
+    const requests = []
+    requests[0] = fetch('https://raw.githubusercontent.com/shopware/platform/01b6568b680e7e3c1dd040e1bc56529a1ff44062/src/Core/Framework/Api/Controller/CacheController.php')
+    requests[1] = fetch('https://raw.githubusercontent.com/shopware/platform/bfa90ba614705a4ea14c1da1deec1b0bbf86f27a/src/Core/Framework/Api/Controller/CacheController.php')
+    const jsonTransforms = (await Promise.all(requests)).map(response => response.text())
+    const [base, modified] = await Promise.all(jsonTransforms)
+    return { base, modified }
 }
 
 onMounted(async () => {
-  if (monacoContainer.value?.tagName !== 'DIV') {
-    return
-  }
+    if (monacoContainer.value?.tagName !== 'DIV') {
+        return
+    }
 
-  monacoInstance = monaco.editor.createDiffEditor(monacoContainer.value, {
+    monacoInstance = monaco.editor.createDiffEditor(monacoContainer.value, {
     // You can optionally disable the resizing
-    enableSplitViewResizing: true,
-    theme: 'vs-dark'
-  })
+        enableSplitViewResizing: true,
+        theme: 'vs-dark'
+    })
 
-  const prInfo = await getPRInfo()
+    const prInfo = await getPRInfo()
 
-  const originalModel = monaco.editor.createModel(
-    prInfo.base,
-    'application/x-php'
-  )
-  const modifiedModel = monaco.editor.createModel(
-    prInfo.modified,
-    'application/x-php'
-  )
+    const originalModel = monaco.editor.createModel(
+        prInfo.base,
+        'application/x-php'
+    )
+    const modifiedModel = monaco.editor.createModel(
+        prInfo.modified,
+        'application/x-php'
+    )
 
-  monacoInstance.setModel({
-    original: originalModel,
-    modified: modifiedModel
-  })
+    monacoInstance.setModel({
+        original: originalModel,
+        modified: modifiedModel
+    })
 
-  monacoDiffNavigator = monaco.editor.createDiffNavigator(monacoInstance, {
-    followsCaret: true,
-    ignoreCharChanges: true
-  })
+    monacoDiffNavigator = monaco.editor.createDiffNavigator(monacoInstance, {
+        followsCaret: true,
+        ignoreCharChanges: true
+    })
 
-  monacoInstance.getLineChanges()
+    monacoInstance.getLineChanges()
 
-  if (resizeHandle.value) { setupResizeHandler(monacoContainer.value, resizeHandle.value, () => monacoInstance?.layout()) }
+    if (resizeHandle.value) { setupResizeHandler(monacoContainer.value, resizeHandle.value, () => monacoInstance?.layout()) }
 })
 
 onUnmounted(() => {
-  monacoInstance?.dispose()
+    monacoInstance?.dispose()
 })
 </script>
 

@@ -1,2 +1,2 @@
-import { schema } from '@octokit/graphql-schema'
-export default schema.json
+const { schema } = require("@octokit/graphql-schema");
+module.exports = schema.json;

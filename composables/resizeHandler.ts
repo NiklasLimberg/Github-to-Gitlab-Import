@@ -1,41 +1,41 @@
 export function setupResizeHandler (
-  resizeableElement: HTMLElement,
-  resizeHandle: HTMLElement,
-  callback?: () => void
+    resizeableElement: HTMLElement,
+    resizeHandle: HTMLElement,
+    callback?: () => void
 ) {
-  const minPaneSize = 150
-  const maxPaneSize = 1000
-  resizeableElement.style.setProperty('--max-height', `${maxPaneSize}px`)
-  resizeableElement.style.setProperty('--min-height', `${minPaneSize}px`)
+    const minPaneSize = 150
+    const maxPaneSize = 1000
+    resizeableElement.style.setProperty('--max-height', `${maxPaneSize}px`)
+    resizeableElement.style.setProperty('--min-height', `${minPaneSize}px`)
 
-  let clearListeners: AbortController | undefined
+    let clearListeners: AbortController | undefined
 
-  function setPaneHeight (height: number) {
-    resizeableElement.style.setProperty('--resizeable-height', `${height - 10}px`)
-  }
-
-  function mouseDragHandler (moveEvent: MouseEvent) {
-    moveEvent.preventDefault()
-
-    if (moveEvent.buttons !== 1) {
-      clearListeners?.abort()
-      return
+    function setPaneHeight (height: number) {
+        resizeableElement.style.setProperty('--resizeable-height', `${height - 10}px`)
     }
 
-    callback()
-    setPaneHeight(moveEvent.pageY)
-  }
+    function mouseDragHandler (moveEvent: MouseEvent) {
+        moveEvent.preventDefault()
 
-  function startDragging (event: MouseEvent) {
-    event.preventDefault()
+        if (moveEvent.buttons !== 1) {
+            clearListeners?.abort()
+            return
+        }
 
-    clearListeners = new AbortController()
+        callback()
+        setPaneHeight(moveEvent.pageY)
+    }
 
-    document.addEventListener('mousemove', mouseDragHandler, { signal: clearListeners.signal })
-    document.addEventListener('blur', () => {
-      clearListeners?.abort()
-    }, { once: true, signal: clearListeners.signal })
-  }
+    function startDragging (event: MouseEvent) {
+        event.preventDefault()
 
-  resizeHandle.addEventListener('mousedown', startDragging)
+        clearListeners = new AbortController()
+
+        document.addEventListener('mousemove', mouseDragHandler, { signal: clearListeners.signal })
+        document.addEventListener('blur', () => {
+            clearListeners?.abort()
+        }, { once: true, signal: clearListeners.signal })
+    }
+
+    resizeHandle.addEventListener('mousedown', startDragging)
 }
