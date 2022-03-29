@@ -48,7 +48,11 @@
       />
     </section>
     <section class="pullRequestCards">
-      {{ pullRequests }}
+      <pr-overview
+        v-for="pullRequest in pullRequests" 
+        :key="pullRequest.id"
+        :pull-request="pullRequest"
+      />
     </section>
   </main>
 </template>

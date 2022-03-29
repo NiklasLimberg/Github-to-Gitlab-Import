@@ -5,10 +5,8 @@ query getPRs($query: String!) {
       endCursor
       startCursor
     }
-    edges {
-      node {
+    nodes {
         ...PullRequestInformation
-      }
     }
   }
 }
@@ -33,139 +31,33 @@ query getPullRequestCommits($name: String!, $number: Int!) {
 } 
 
 fragment PullRequestInformation on PullRequest {
+  id
   url
   title
+  number
   createdAt
   lastEditedAt
+  reviewDecision
   author {
     login
-  }
-  comments {
-    totalCount
+    avatarUrl
   }
   repository {
     id
     name
   }
-  timelineItems(last: 20) {
-    edges {
-      node {
-        ... on IssueComment {
-          __typename
-          author {
-            login
-          }
-        }
-        ... on PullRequestCommit {
-          __typename
-          commit {
-            authoredDate
-            author {
-              user {
-                login
-              }
-            }
-          }
-        }
-        ... on HeadRefForcePushedEvent {
-          __typename
-          createdAt
-          actor {
-            login
-          }
-        }
-        ... on RenamedTitleEvent {
-          __typename
-          actor {
-            login
-          }
-        }
-        ... on PullRequestCommitCommentThread {
-          __typename
-          comments(last: 10) {
-            edges {
-              node {
-                updatedAt
-                author {
-                  login
-                }
-              }
-            }
-          }
-        }
-        ... on PullRequestReview {
-          __typename
-          updatedAt
-          author {
-            login
-          }
-        }
-        ... on PullRequestReviewThread {
-          __typename
-          comments(last: 10) {
-            totalCount
-            edges {
-              node {
-                ... on PullRequestReviewComment {
-                  updatedAt
-                  author {
-                    login
-                  }
-                }
-              }
-            }
-          }
-        }
-        ... on LabeledEvent {
-          __typename
-          actor {
-            login
-          }
-        }
-        ... on UnlabeledEvent {
-          __typename
-          actor {
-            login
-          }
-        }
-        ... on AssignedEvent {
-          __typename
-          actor {
-            login
-          }
-        }
-        ... on UnassignedEvent {
-          __typename
-          createdAt
-          actor {
-            login
-          }
-        }
-        ... on ConvertToDraftEvent {
-          __typename
-          actor {
-            login
-          }
-        }
-      }
-    }
-  }
   assignees(last: 5) {
-    edges {
-      node {
-        login
-        avatarUrl
-      }
+    nodes {
+      login
+      avatarUrl
     }
   }
   state
   labels(first: 6) {
-    edges {
-      node {
-        id
-        name
-        color
-      }
+    nodes {
+      id
+      name
+      color
     }
   }
 }

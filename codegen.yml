@@ -7,6 +7,10 @@ generates:
       - "typescript-resolvers"
       - "typescript-document-nodes"
       - "typescript-operations"
+    config:
+      flattenGeneratedTypes: true
+      preResolveTypes: true
+      avoidOptionals: true
 documents:
   - server/github/queries/*.graphql
   - server/github/mutations/*.graphql

@@ -1,6 +1,17 @@
 <template>
-  <img src="https://avatars.githubusercontent.com/u/31859769">
+  <img
+    v-if="iconPath"
+    :style="{height: size, width: size}"
+    :src="iconPath"
+  >
 </template>
+
+<script setup lang="ts">
+withDefaults(defineProps<{ iconPath?: string, size?: string}>(), {
+    iconPath: '',
+    size: '16px'
+})
+</script>
 
 <style scoped>
 img  {

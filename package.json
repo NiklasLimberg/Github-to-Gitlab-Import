@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@fontsource/inter": "^4.5.7",
+    "@graphql-codegen/typescript-type-graphql": "^2.2.9",
     "@octokit/core": "^3.6.0",
     "@types/resize-observer-browser": "^0.1.7",
     "@vueuse/core": "^8.2.0",

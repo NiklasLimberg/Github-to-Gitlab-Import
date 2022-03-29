@@ -37,8 +37,11 @@
     --border-width: 1px;
 
     --text-large: normal 700 32px/24px  'Inter';
+    --text-bold: normal 700 16px/19px 'Inter'
+    --text-semibold: normal 600 12px/15px 'Inter';
     --text-normal:  normal 400 14px/24px 'Inter';
     --text-secondary: normal 400 14px/18px 'Inter';
+    --text-small: normal 400 12px/15px 'Inter';
 
     --default-unit: 8px;
     --default-border-radius: 6px;
@@ -60,6 +63,8 @@ body.dark-theme {
         --border-color: var(--neutrals-dark-gray-400);
         --default-border: 1px solid var(--border-color);
         --check-mark-fill: var(--neutrals-dark-gray-200);
+        --default-label-color: var(--neutrals-dark-gray-600);
+        --small-text-color: var(--neutrals-gray-500);
     }
 
     body.light-theme {
@@ -70,6 +75,8 @@ body.dark-theme {
       --border-color: var(--neutrals-gray-400);
       --default-border: 1px solid var(--border-color);
       --check-mark-fill: var(--neutrals-gray-500);
+      --default-label-color: var(--neutrals-gray-100);
+      --small-text-color: var(--neutrals-dark-gray-300);
     }
 }
 
