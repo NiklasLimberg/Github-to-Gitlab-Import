@@ -1,10 +1,16 @@
-const availableOptions = [
-    'Platform',
-    'Development',
-    'Production',
-    'Shopware'
-].map(option => { return { id: option, name: option }})
-
+const availableOptions = [{
+    id: 'shopware/platform',
+    name: 'Platform'
+}, {
+    id: 'shopware/development',
+    name: 'Development'
+}, {
+    id: 'shopware/production',
+    name: 'Production'
+}, {
+    id: `shopware/shopware`,
+    name: 'Shopware'
+}]
 
 export function useRepositoryOptions() {
     const searchTerm = ref('')

@@ -12,7 +12,7 @@
         :options="repositoryOptions.options.value"
         :search-term="repositoryOptions.searchTerm.value"
         @search="search => repositoryOptions.searchTerm.value = search"
-        @option-click="selection => toggleSelection(selection, 'repository')"
+        @option-click="selection => toggleSelection(selection, 'repo')"
       />
       <multi-select-button
         :selection="selectedOptions.author"
@@ -65,7 +65,7 @@ interface SelectedOptions {
   review: string[]
 }
 
-const searchTerm =  ref('org:shopware is:pr is:open repo:platform')
+const searchTerm =  ref('repo:shopware/platform is:pr is:open')
 const { data: pullRequests }  = await useFetch('/api/pulls', { method: 'post', body: { q: searchTerm.value} })
 
 async function fetchPRs() {
@@ -79,11 +79,6 @@ async function fetchPRs() {
 debouncedWatch(searchTerm, async ()=> {
     fetchPRs()
 }, { debounce: 100 })
-
-
-
-
-
 
 const repositoryOptions = useRepositoryOptions()
 const authorOptions = useUserOptions()
@@ -108,7 +103,7 @@ const selectedOptions = computed(() => {
         }
 
         switch (option[0]) {
-        case 'repository':
+        case 'repo':
             selection.repository.push(option[1])
             break;
         case 'author':
@@ -129,15 +124,16 @@ const selectedOptions = computed(() => {
     return selection
 })
 
-function toggleSelection(selection: string, kind: 'repository' | 'author' | 'assignee' |  'label' | 'review') {
-    const option =  `${kind}:${selection} `
+function toggleSelection(selection: string, kind: 'repo' | 'author' | 'assignee' |  'label' | 'review') {
+    const option = `${kind}:${selection}`
   
     if(searchTerm.value.includes(option)) {
-        searchTerm.value.replaceAll(option, '')
+        const regex = new RegExp(` *${option} *`)
+        searchTerm.value.replaceAll(regex, '')
         return
     }
 
-    searchTerm.value += (option)
+    searchTerm.value += ` ${option}`
 }
 </script>
 
