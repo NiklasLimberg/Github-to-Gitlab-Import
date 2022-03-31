@@ -15,6 +15,7 @@ query getPR($name: String!, $number: Int!) {
   repository(owner: "shopware", name: $name) {
      pullRequest(number: $number) {
        ...PullRequestInformation
+       bodyHTML
      }
   }
 }

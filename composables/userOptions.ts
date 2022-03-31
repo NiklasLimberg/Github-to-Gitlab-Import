@@ -34,7 +34,9 @@ export function useUserOptions() {
         })
     }
   
-    watchEffect(async () => {options.value = await getOptions()})
+    watchEffect(async () => {
+        options.value = await getOptions()
+    })
   
     return {
         searchTerm,

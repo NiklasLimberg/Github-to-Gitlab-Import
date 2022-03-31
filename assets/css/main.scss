@@ -79,7 +79,9 @@ body.dark-theme {
       --small-text-color: var(--neutrals-dark-gray-300);
     }
 }
-
+a {
+    text-decoration: none;
+}
 h1 {
     font: var(--text-large);
     margin: 0;
