@@ -16,6 +16,18 @@ query getPR($name: String!, $number: Int!) {
      pullRequest(number: $number) {
        ...PullRequestInformation
        bodyHTML
+       files(first: 100) {
+         nodes {
+           __typename
+           path,
+           additions,
+           deletions
+         }
+       }
+       additions
+       deletions
+       baseRefOid
+       headRefOid
      }
   }
 }

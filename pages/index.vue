@@ -48,7 +48,7 @@
       />
     </section>
     <section class="pullRequestCards">
-      <pr-overview
+      <pull-request-overview-card
         v-for="pullRequest in pullRequests" 
         :key="pullRequest.id"
         :pull-request="pullRequest"
@@ -131,17 +131,22 @@ const selectedOptions = computed(() => {
 function toggleSelection(selection: string, kind: 'repo' | 'author' | 'assignee' |  'label' | 'review') {
     const option = `${kind}:${selection}`
   
-    if(searchTerm.value.includes(option)) {
-        const regex = new RegExp(` *${option} *`)
-        searchTerm.value.replaceAll(regex, '')
+    const regex = new RegExp(` *${option} *`, 'g')
+
+    if(regex.test(searchTerm.value)) {
+        searchTerm.value = searchTerm.value.replaceAll(regex, '')
         return
     }
-
-    searchTerm.value += ` ${option}`
+    
+    searchTerm.value += ` ${option}`  
 }
 </script>
 
 <style lang="scss" scoped>
+a {
+    text-decoration: none;
+}
+
 header {
   display: flex;
   justify-content: space-between;

@@ -1,11 +1,19 @@
 <template>
-  <div>
-    <button @click="monacoDiffNavigator?.next()">
-      Next
-    </button>
-    <button @click="monacoDiffNavigator?.previous()">
-      Previous
-    </button>
+  <div class="container">
+    <div class="header">
+      <div class="info">
+        <button @click="monacoDiffNavigator?.next()">
+          Next
+        </button>
+        <button @click="monacoDiffNavigator?.previous()">
+          Previous
+        </button>
+        <div>{{ path }}</div>
+      </div>
+      <div class="changes">
+        420 - 150
+      </div>
+    </div>
     <div
       ref="monacoContainer"
       class="resizeable"
@@ -61,37 +69,47 @@ const resizeHandle = ref<HTMLDivElement | null>(null)
 let monacoInstance: monacoType.editor.IStandaloneDiffEditor | undefined
 let monacoDiffNavigator: monacoType.editor.IDiffNavigator | undefined
 
-// this will be moved to the scope of the page
-async function getPRInfo () {
-    const requests = []
-    requests[0] = fetch('https://raw.githubusercontent.com/shopware/platform/01b6568b680e7e3c1dd040e1bc56529a1ff44062/src/Core/Framework/Api/Controller/CacheController.php')
-    requests[1] = fetch('https://raw.githubusercontent.com/shopware/platform/bfa90ba614705a4ea14c1da1deec1b0bbf86f27a/src/Core/Framework/Api/Controller/CacheController.php')
-    const jsonTransforms = (await Promise.all(requests)).map(response => response.text())
-    const [base, modified] = await Promise.all(jsonTransforms)
-    return { base, modified }
+const props = defineProps<{path: string, base: string, modified: string}>()
+
+function detectLanguage(path: string) {
+    switch (path.split('.').pop()) {
+    case 'css':
+        return 'css';
+    case 'js' || 'ts':
+        return 'typescript'
+    case 'php':
+        return 'php'
+    case 'md':
+        return 'markdown'
+    case 'twig' || 'html':
+        return 'html'
+    default: 
+        return 'text'
+    }
 }
+
 
 onMounted(async () => {
     if (monacoContainer.value?.tagName !== 'DIV') {
         return
     }
 
+    const language = detectLanguage(props.path);
+    const originalModel = monaco.editor.createModel(
+        props.base,
+        language
+    )
+
+    const modifiedModel = monaco.editor.createModel(
+        props.modified,
+        language
+    )
+
     monacoInstance = monaco.editor.createDiffEditor(monacoContainer.value, {
     // You can optionally disable the resizing
         enableSplitViewResizing: true,
         theme: 'vs-dark'
     })
-
-    const prInfo = await getPRInfo()
-
-    const originalModel = monaco.editor.createModel(
-        prInfo.base,
-        'application/x-php'
-    )
-    const modifiedModel = monaco.editor.createModel(
-        prInfo.modified,
-        'application/x-php'
-    )
 
     monacoInstance.setModel({
         original: originalModel,
@@ -113,7 +131,32 @@ onUnmounted(() => {
 })
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
+.container {
+    background-color: var(--background-color) ;
+    border: var(--default-border);
+    border-radius: 6px;
+}
+
+.header {
+    border-bottom: var(--default-border);
+    display: flex;
+    padding: 6px 8px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.info {
+    display: flex;
+    align-items: center;
+    gap: 8px
+}
+
+.changes {
+    display: flex;
+    align-items: center;
+}
+
 .resizeable {
   box-sizing: border-box;
   --resizeable-height: 300px;

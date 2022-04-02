@@ -10,10 +10,13 @@ export async function getPullRequests(query: string): Promise<GetPRsQuery> {
     return result.data
 }
 
-export async function getPullRequestByNumber(name: string, number: number): Promise<GetPrQuery> {
+export async function getPullRequest(repositoryName: string, prNumber: number): Promise<GetPrQuery> {
     const result = await githubClient().query<GetPrQuery, GetPrQueryVariables>({
         query: GetPr, 
-        variables: { name, number }
+        variables: {
+            name: repositoryName, 
+            number: prNumber
+        }
     })
 
     return result.data

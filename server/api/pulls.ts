@@ -6,8 +6,16 @@ import { getPullRequests } from '../github'
 import type { PullRequest, User, Label } from '../types/pullRequest'
 
 export default async (req: IncomingMessage) => {
-    const body = await useBody(req)
-    const pullRequests = await getPullRequests(body.q)
+    let  { q: query } = await useBody(req)
+
+    const regex = /repo:\w*\/\w*/g
+    if(!regex.test(query)) {
+        query += ' org:shopware'
+    }
+
+    console.log(query)
+
+    const pullRequests = await getPullRequests(query)
 
     const refinedPullRequests: PullRequest[] = []
 
