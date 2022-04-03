@@ -1,60 +1,62 @@
 <template>
-  <header>
-    <h1>Github Importer</h1>
-    <icon-cog />
-  </header>
-  <main>
-    <section class="search-section">
-      <search-bar v-model="searchTerm" />
-      <multi-select-button 
-        :selection="selectedOptions.repository"
-        title="Repository"
-        :options="repositoryOptions.options.value"
-        :search-term="repositoryOptions.searchTerm.value"
-        @search="search => repositoryOptions.searchTerm.value = search"
-        @option-click="selection => toggleSelection(selection, 'repo')"
-      />
-      <multi-select-button
-        :selection="selectedOptions.author"
-        title="Author"
-        :options="authorOptions.options.value"
-        :search-term="authorOptions.searchTerm.value"
-        @search="search => authorOptions.searchTerm.value = search"
-        @option-click="selection => toggleSelection(selection, 'author')"
-      />
-      <multi-select-button
-        :selection="selectedOptions.assignee"
-        title="Assignee"
-        :options="assigneeOptions.options.value"
-        :search-term="assigneeOptions.searchTerm.value"
-        @search="search => assigneeOptions.searchTerm.value = search"
-        @option-click="selection => toggleSelection(selection, 'assignee')"
-      />
-      <multi-select-button
-        :selection="selectedOptions.label" 
-        title="Label"
-        :options="labelOptions.options.value"
-        :search-term="labelOptions.searchTerm.value"
-        @search="search => labelOptions.searchTerm.value = search"
-        @option-click="selection => toggleSelection(selection, 'label')"
-      />
-      <multi-select-button
-        :selection="selectedOptions.review"
-        title="Review" 
-        :options="reviewOptions.options.value"
-        :search-term="reviewOptions.searchTerm.value"
-        @search="search => reviewOptions.searchTerm.value = search"
-        @option-click="selection => toggleSelection(selection, 'review')"
-      />
-    </section>
-    <section class="pullRequestCards">
-      <pull-request-overview-card
-        v-for="pullRequest in pullRequests" 
-        :key="pullRequest.id"
-        :pull-request="pullRequest"
-      />
-    </section>
-  </main>
+  <div>
+    <header>
+      <h1>Github Importer</h1>
+      <settings />
+    </header>
+    <main>
+      <section class="search-section">
+        <search-bar v-model="searchTerm" />
+        <multi-select-button 
+          :selection="selectedOptions.repository"
+          title="Repository"
+          :options="repositoryOptions.options.value"
+          :search-term="repositoryOptions.searchTerm.value"
+          @search="search => repositoryOptions.searchTerm.value = search"
+          @option-click="selection => toggleSelection(selection, 'repo')"
+        />
+        <multi-select-button
+          :selection="selectedOptions.author"
+          title="Author"
+          :options="authorOptions.options.value"
+          :search-term="authorOptions.searchTerm.value"
+          @search="search => authorOptions.searchTerm.value = search"
+          @option-click="selection => toggleSelection(selection, 'author')"
+        />
+        <multi-select-button
+          :selection="selectedOptions.assignee"
+          title="Assignee"
+          :options="assigneeOptions.options.value"
+          :search-term="assigneeOptions.searchTerm.value"
+          @search="search => assigneeOptions.searchTerm.value = search"
+          @option-click="selection => toggleSelection(selection, 'assignee')"
+        />
+        <multi-select-button
+          :selection="selectedOptions.label" 
+          title="Label"
+          :options="labelOptions.options.value"
+          :search-term="labelOptions.searchTerm.value"
+          @search="search => labelOptions.searchTerm.value = search"
+          @option-click="selection => toggleSelection(selection, 'label')"
+        />
+        <multi-select-button
+          :selection="selectedOptions.review"
+          title="Review" 
+          :options="reviewOptions.options.value"
+          :search-term="reviewOptions.searchTerm.value"
+          @search="search => reviewOptions.searchTerm.value = search"
+          @option-click="selection => toggleSelection(selection, 'review')"
+        />
+      </section>
+      <section class="pullRequestCards">
+        <pull-request-overview-card
+          v-for="pullRequest in pullRequests" 
+          :key="pullRequest.id"
+          :pull-request="pullRequest"
+        />
+      </section>
+    </main>
+  </div>
 </template>
 
 <script setup lang="ts">

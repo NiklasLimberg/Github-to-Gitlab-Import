@@ -2,13 +2,7 @@
   <div class="container">
     <div class="header">
       <div class="info">
-        <button @click="monacoDiffNavigator?.next()">
-          Next
-        </button>
-        <button @click="monacoDiffNavigator?.previous()">
-          Previous
-        </button>
-        <div>{{ path }}</div>
+        {{ path }}
       </div>
       <div class="changes">
         420 - 150
@@ -16,11 +10,7 @@
     </div>
     <div
       ref="monacoContainer"
-      class="resizeable"
-    />
-    <div
-      ref="resizeHandle"
-      class="handle"
+      class="editor"
     />
   </div>
 </template>
@@ -31,45 +21,14 @@ import { onMounted, ref, onUnmounted } from 'vue'
 import * as monaco from 'monaco-editor'
 import type monacoType from 'monaco-editor'
 
-// currently just chrome supports the way vite uses workers in dev mode
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-ignore
-import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
-// @ts-ignore
-import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
-// @ts-ignore
-import CssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
-// @ts-ignore
-import HtmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
-// @ts-ignore
-import TsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
-/* eslint-enable @typescript-eslint/ban-ts-comment */
-
-import 'monaco-editor/esm/vs/basic-languages/php/php.contribution'
-
-window.MonacoEnvironment = {
-    getWorker (_, label) {
-        switch (label) {
-        case 'json':
-            return new JsonWorker()
-        case 'css' || 'scss' || 'less':
-            return new CssWorker()
-        case 'html':
-            return new HtmlWorker()
-        case 'typescript' || 'javascript':
-            return new TsWorker()
-        default: return new EditorWorker()
-        }
-    }
-}
+import {createPatch } from 'diff'
 
 const monacoContainer = ref<HTMLDivElement | null>(null)
-const resizeHandle = ref<HTMLDivElement | null>(null)
 
 let monacoInstance: monacoType.editor.IStandaloneDiffEditor | undefined
-let monacoDiffNavigator: monacoType.editor.IDiffNavigator | undefined
 
 const props = defineProps<{path: string, base: string, modified: string}>()
+const emit = defineEmits<{(e: 'override', value: string): void}>()
 
 function detectLanguage(path: string) {
     switch (path.split('.').pop()) {
@@ -116,14 +75,13 @@ onMounted(async () => {
         modified: modifiedModel
     })
 
-    monacoDiffNavigator = monaco.editor.createDiffNavigator(monacoInstance, {
-        followsCaret: true,
-        ignoreCharChanges: true
+    monacoInstance.onDidUpdateDiff(() => {
+        const modifiedValue = monacoInstance?.getModifiedEditor().getValue() || '';
+        const override = modifiedValue === props.modified ? '' : createPatch(props.path, props.modified, modifiedValue) 
+        emit('override', override)
     })
 
     monacoInstance.getLineChanges()
-
-    if (resizeHandle.value) { setupResizeHandler(monacoContainer.value, resizeHandle.value, () => monacoInstance?.layout()) }
 })
 
 onUnmounted(() => {
@@ -136,6 +94,10 @@ onUnmounted(() => {
     background-color: var(--background-color) ;
     border: var(--default-border);
     border-radius: 6px;
+}
+
+.editor {
+    height: 480px;
 }
 
 .header {
@@ -155,29 +117,5 @@ onUnmounted(() => {
 .changes {
     display: flex;
     align-items: center;
-}
-
-.resizeable {
-  box-sizing: border-box;
-  --resizeable-height: 300px;
-  height: var(--resizeable-height);
-  min-height: var(--min-height);
-  max-height: var(--max-height);
-  background-color: grey;
-  resize: vertical;
-}
-
-.handle {
-  cursor: row-resize;
-  width: 100%;
-  height: 5px;
-  transition: height 0.25s;
-  background-color: rgb(75, 75, 75);
-  font-size: 30px;
-  text-align: center;
-}
-
-.handle:hover {
-  height: 10px;
 }
 </style>

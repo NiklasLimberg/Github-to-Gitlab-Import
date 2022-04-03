@@ -16,17 +16,20 @@
     <div>{{ pullRequest.additions }} - {{ pullRequest.deletions }}</div>
 
     <monaco-editor
-    class="editor-container"
-      v-for="(file, index) in files"
+      v-for="file in files"
       :key="file.path"
+      class="editor-container"
       :path="file.path"
       :base="file.baseFile"
       :modified="file.modifiedFile"
+      @override="(override) => fileOverride(file.path, override)"
     />
   </div>
 </template>
 
 <script setup lang="ts">
+registerMonacoWorkers()
+
 interface File {
   path: string
   baseFile: string
@@ -47,6 +50,10 @@ const { data: pullRequest, pending } = await useFetch('/api/pull', {
 
 let files = ref([] as File[])
 watch(pullRequest, async () => {
+    if(!pullRequest.value) {
+        return
+    }
+    
     const getFile = createFileProvider(
         'shopware', 
         pullRequest.value.repository.name,
@@ -55,7 +62,18 @@ watch(pullRequest, async () => {
     )
 
     files.value = await Promise.all(pullRequest.value.files.map(file => getFile(file.path)))
-})
+}, { immediate: true })
+
+const overrides = new Map<string, string>()
+function fileOverride(path: string, override: string) {
+    console.log(override)
+    if(override.length === 0) {
+        overrides.delete(path)
+        return
+    }
+    overrides.set(path, override)
+}
+
 </script>
 
 
@@ -66,7 +84,6 @@ watch(pullRequest, async () => {
 .labels {
    padding-top: 24px;
 }
-
 .editor-container {
   margin-bottom: 16px;
 }

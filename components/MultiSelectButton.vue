@@ -1,32 +1,34 @@
 <template>
-  <dropdown-element>
-    <template #base>
-      <button
-        class="main-button"
-        aria-haspopup="true"
-      >
-        {{ props.title }}
-        <icon-chevron-down />
-      </button>
-    </template>
-    <template #elements>
-      <search-bar
-        :model-value="props.searchTerm"
-        class="search-container"
-        @update:model-value="emit('search', $event)"
-      />
-      <ul>
-        <li
-          v-for="option in props.options"
-          :key="option.name"
-          @click="emit('optionClick', option.id)"
+  <div>
+    <dropdown-element>
+      <template #base>
+        <button
+          class="main-button"
+          aria-haspopup="true"
         >
-          <span>{{ option.name }}</span>
-          <icon-check v-if="props.selection.includes(option.id)" />
-        </li>
-      </ul>
-    </template>
-  </dropdown-element>
+          {{ props.title }}
+          <icon-chevron-down />
+        </button>
+      </template>
+      <template #elements>
+        <search-bar
+          :model-value="props.searchTerm"
+          class="search-container"
+          @update:model-value="emit('search', $event)"
+        />
+        <ul>
+          <li
+            v-for="option in props.options"
+            :key="option.name"
+            @click="emit('optionClick', option.id)"
+          >
+            <span>{{ option.name }}</span>
+            <icon-check v-if="props.selection.includes(option.id)" />
+          </li>
+        </ul>
+      </template>
+    </dropdown-element>
+  </div>
 </template>
 
 <script setup lang="ts">
