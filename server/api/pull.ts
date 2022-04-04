@@ -3,7 +3,7 @@ import type { IncomingMessage } from 'http'
 import { useQuery } from 'h3'
 import { getPullRequest } from '../github'
 
-import type { ExtendedPullRequest, User, Label, ChangedFile } from '../types/pullRequest'
+import { ExtendedPullRequest, User, Label, ChangedFile, PullRequestCollapsedState } from '../types/pullRequest'
 
 export default async (req: IncomingMessage) => {
     const query = useQuery(req) as { repositoryName: string, prNumber: string }
@@ -19,6 +19,7 @@ export default async (req: IncomingMessage) => {
     const assignees: User[] = []
     const labels: Label[] = []
     const files: ChangedFile[] = []
+    let collapsedState: PullRequestCollapsedState = PullRequestCollapsedState.Ready
 
     pullRequest.assignees?.nodes?.map(assignee => {
 
@@ -56,6 +57,19 @@ export default async (req: IncomingMessage) => {
         })
     })
 
+
+    if(pullRequest.reviewDecision === 'CHANGES_REQUESTED') {
+        collapsedState = PullRequestCollapsedState.ReviewFailed
+    }
+
+    if(!pullRequest.mergeable) {
+        collapsedState = PullRequestCollapsedState.MergeConflicts
+    }
+
+    if(labels.some(label => label.name === 'scheduled')) {
+        collapsedState = PullRequestCollapsedState.Imported
+    }
+
     return {
         id: pullRequest.id,
         url: pullRequest.url,
@@ -78,6 +92,8 @@ export default async (req: IncomingMessage) => {
         deletions: pullRequest.deletions,
         assignees: assignees,
         state: pullRequest.state,
+        mergeable: pullRequest.mergeable === 'MERGEABLE',
+        collapsedState,
         bodyHTML: pullRequest.bodyHTML,
         labels,
         files

@@ -19,19 +19,24 @@
     --neutrals-dark-gray-900: #0A0D0F;
 
     // brand-vivacious
+    --vivacious-50: #E7F1FC;
     --vivacious-200: #B7D6F5;
     --vivacious-500: #0F76DE;
     --vivacious-600: #0E6AC8;
     --vivacious-700: #0C5EB2;
 
-    // status-crimson 
+    // status-crimson
+    --status-crimson-50: #FBE5EA;
     --status-crimson-500: #DE294C;
     --status-crimson-600: #D51F3C;
     
     // status-pumpkin-spice 
+    --status-pumpkin-spice-50: #FFF3E0;
     --status-pumpkin-spice-500: #FF9800;
 
-    // status-emerald 
+    // status-emerald ´
+    --status-emerald-50: #E7F9E9;
+    
     --status-emerald-500: #37D046;
 
     --border-width: 1px;
@@ -65,18 +70,30 @@ body.dark-theme {
         --check-mark-fill: var(--neutrals-dark-gray-200);
         --default-label-color: var(--neutrals-dark-gray-600);
         --small-text-color: var(--neutrals-gray-500);
+
+        --icon-background-imported: var(--neutrals-dark-gray-600);
+        --icon-background-ready: #0F3D14;
+        --icon-background-update: #002C4D;
+        --icon-background-review-failed: #4D2F00;
+        --icon-background-pipeline-failed: #4B0C1A;
     }
 
     body.light-theme {
-      --text-color: var(--neutrals-dark-gray-800);
-      --background-page-color: var(--neutrals-gray-50);
-      --background-color: var(--neutrals-white);
-      --background-hover-color: var(--neutrals-gray-200);
-      --border-color: var(--neutrals-gray-400);
-      --default-border: 1px solid var(--border-color);
-      --check-mark-fill: var(--neutrals-gray-500);
-      --default-label-color: var(--neutrals-gray-100);
-      --small-text-color: var(--neutrals-dark-gray-300);
+        --text-color: var(--neutrals-dark-gray-800);
+        --background-page-color: var(--neutrals-gray-50);
+        --background-color: var(--neutrals-white);
+        --background-hover-color: var(--neutrals-gray-200);
+        --border-color: var(--neutrals-gray-400);
+        --default-border: 1px solid var(--border-color);
+        --check-mark-fill: var(--neutrals-gray-500);
+        --default-label-color: var(--neutrals-gray-100);
+        --small-text-color: var(--neutrals-dark-gray-300);
+
+        --icon-background-imported: var(--neutrals-gray-100);
+        --icon-background-ready: var(--status-emerald-50);
+        --icon-background-update: var(--vivacious-50);
+        --icon-background-review-failed: var(--status-pumpkin-spice-50);
+        --icon-background-pipeline-failed: var(--status-crimson-50);
     }
 }
 
@@ -107,6 +124,31 @@ input {
     background-color: var(--background-color);
     border: var(--default-border);
     border-radius: var(--default-border-radius);
+}
+
+button {
+    width: fit-content;
+    height: fit-content;
+}
+
+.button-primary {
+    display: inline;
+    text-align: center;
+    border-color: var(--vivacious-600);
+    background-color: var(--vivacious-500);
+    font: var(--text-bold);
+    border-radius: 6px;
+    padding: 8px 20px;
+}
+
+.button-secondary {
+    display: inline;
+    text-align: center;
+    border-color: var(--neutrals-dark-gray-700);
+    background-color: var(--neutrals-dark-gray-400);
+    font: var(--text-bold);
+    border-radius: 6px;
+    padding: 8px 20px;
 }
 
 * {

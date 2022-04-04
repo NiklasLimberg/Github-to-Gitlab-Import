@@ -51,6 +51,8 @@ fragment PullRequestInformation on PullRequest {
   createdAt
   lastEditedAt
   reviewDecision
+  merged
+  mergeable,
   author {
     login
     avatarUrl

@@ -1,5 +1,6 @@
 export function dateFilter(date: string):string {
-    return new Date(date).toLocaleDateString(undefined, { weekday: 'long',
+    return new Date(date).toLocaleDateString('en-GB', {
+        weekday: 'long',
         year: 'numeric',
         month: 'numeric', 
         day: 'numeric' 

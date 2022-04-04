@@ -3,12 +3,18 @@
     :to="`/${pullRequest.repository.name}/${pullRequest.number}`"
     class="prOverviewContainer"
   >
-    <div>
-      <div class="prTitle">
-        {{ pullRequest.title }}
-      </div>
-      <div class="prSubLine">
-        {{ subLine }}
+    <div class="prInformation">
+      <icon-imported v-if="pullRequest.collapsedState === 'imported'" />
+      <icon-review-failed v-if="pullRequest.collapsedState === 'review-failed'" />
+      <icon-merge-conflicts v-if="pullRequest.collapsedState === 'merge-conflicts'" />
+      <icon-ready v-if="pullRequest.collapsedState === 'ready'" />
+      <div>
+        <div class="prTitle">
+          {{ pullRequest.title }}
+        </div>
+        <div class="prSubLine">
+          {{ subLine }}
+        </div>
       </div>
     </div>
     <div class="center-align">
@@ -59,6 +65,10 @@ const subLine = computed(() => {
 .prSubLine {
   font: var(--text-small);
   color: var(--small-text-color);
+}
+.prInformation {
+  display: flex;
+  gap: 16px;
 }
 
 .center-align {

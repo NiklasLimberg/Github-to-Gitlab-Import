@@ -10,9 +10,16 @@ export interface User {
 }
 
 export interface ChangedFile {
-    path: string,
+    path: string
     additions: number
     deletions: number
+}
+
+export const enum PullRequestCollapsedState {
+    Imported = 'imported',
+    Ready = 'ready',
+    MergeConflicts = 'merge-conflicts',
+    ReviewFailed = 'review-failed'
 }
 
 export interface PullRequest {
@@ -27,7 +34,9 @@ export interface PullRequest {
       id: string
       name: string
     }
+    mergeable: boolean,
     assignees?: User[]
+    collapsedState: PullRequestCollapsedState
     state: 'CLOSED' | 'MERGED' | 'OPEN'
     reviewDecision: 'APPROVED' | 'CHANGES_REQUESTED' | 'REVIEW_REQUIRED'
     labels?: Label[]

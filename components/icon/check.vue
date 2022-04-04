@@ -18,5 +18,4 @@
 svg {
     fill: var(--check-mark-fill);
 }
-
 </style>

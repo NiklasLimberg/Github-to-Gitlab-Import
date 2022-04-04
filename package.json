@@ -28,6 +28,7 @@
     "monaco-editor": "^0.33.0",
     "sass-loader": "^12.6.0",
     "uuid": "^8.3.2",
+    "vue-a11y-dialog": "^1.1.2",
     "vue-tsc": "^0.33.7"
   },
   "devDependencies": {
