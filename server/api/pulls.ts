@@ -27,6 +27,7 @@ export default async (req: IncomingMessage) => {
         const assignees: User[] = []
         const labels: Label[] = []
         let collapsedState: PullRequestCollapsedState = PullRequestCollapsedState.Ready
+        let originalCommitMessage = '';
 
 
         pullRequest.assignees?.nodes?.map(assignee => {
@@ -65,6 +66,11 @@ export default async (req: IncomingMessage) => {
             collapsedState = PullRequestCollapsedState.Imported
         }
 
+        const commits = pullRequest.commits; 
+        if(commits.__typename === 'PullRequestCommitConnection') {
+            originalCommitMessage = commits.nodes?.at(0)?.commit?.message ?? ''
+        }
+
         refinedPullRequests.push({
             id: pullRequest.id,
             url: pullRequest.url,
@@ -74,6 +80,7 @@ export default async (req: IncomingMessage) => {
             title: pullRequest.title,
             createdAt: pullRequest.createdAt,
             lastEditedAt: pullRequest.lastEditedAt,
+            originalCommitMessage,
             mergeable: pullRequest.mergeable === 'MERGEABLE',
             author: {
                 login: pullRequest.author?.login || '',

@@ -4,7 +4,7 @@
       <h1>Github Importer</h1>
       <settings />
     </header>
-    <main>
+    <main>  
       <section class="search-section">
         <search-bar v-model="searchTerm" />
         <multi-select-button 

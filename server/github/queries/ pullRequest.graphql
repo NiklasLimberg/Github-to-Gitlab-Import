@@ -61,6 +61,13 @@ fragment PullRequestInformation on PullRequest {
     id
     name
   }
+  commits(first: 1) {
+    nodes {
+      commit {
+        message
+      }
+    }
+  }
   assignees(last: 5) {
     nodes {
       login

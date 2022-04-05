@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="action-buttons">
-        <nuxt-link>
+        <nuxt-link :to="pullRequest.url">
           <button class="button-secondary">
             Github
           </button>
@@ -24,7 +24,9 @@
       </div>
     </header>
     <section class="description-section">
-      <pull-request-description :description="pullRequest.bodyHTML" />
+      <pull-request-description 
+        :description="pullRequest.bodyHTML"
+      />
       <pull-request-side-bar
         :author="pullRequest.author"
         :assignee="pullRequest.assignee"
@@ -48,8 +50,12 @@
         @override="(override) => fileOverride(file.path, override)"
       />
     </section>
+    <modal-commits
+      :is-open="true"
+      :original-commit-message="pullRequest.originalCommitMessage"
+      :has-edits="overrides.size !== 0"
+    />
   </div>
-  <commit-message-modal />
 </template>
 
 <script setup lang="ts">
@@ -62,12 +68,12 @@ interface File {
 }
 
 const route = useRoute()
-const repository = route.params.repository as string;
+const repositoryName = route.params.repository as string;
 const prNumber = route.params.prNumber as string;
 
 const { data: pullRequest, pending } = await useFetch('/api/pull', { 
     params: {
-        repositoryName: repository,
+        repositoryName,
         prNumber
     } 
 })
@@ -87,7 +93,7 @@ watch(pullRequest, async () => {
     )
 
     files.value = await Promise.all(pullRequest.value.files.map(file => getFile(file.path)))
-}, { immediate: true })
+})
 
 const overrides = new Map<string, string>()
 function fileOverride(path: string, override: string) {

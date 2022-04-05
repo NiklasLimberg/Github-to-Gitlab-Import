@@ -34,6 +34,7 @@ export interface PullRequest {
       id: string
       name: string
     }
+    originalCommitMessage: string
     mergeable: boolean,
     assignees?: User[]
     collapsedState: PullRequestCollapsedState
