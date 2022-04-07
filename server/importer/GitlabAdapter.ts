@@ -1,4 +1,4 @@
-import { Axios } from 'axios';
+import  axios  from 'axios';
 import {mappings, mappingKeys} from  './mappings';
 
 // Schema translated from https://docs.gitlab.com/ee/api/merge_requests.html#create-mr
@@ -14,10 +14,10 @@ interface MergeRequestSchema {
 }
 
 export default class GitlabAdapter {
-    #axios: Axios
+    #axios
 
     constructor(baseURL: string, authToken: string) {
-        this.#axios = new Axios({
+        this.#axios = axios.create({
             baseURL: baseURL,
             headers: {
                 'Accept': 'application/json',

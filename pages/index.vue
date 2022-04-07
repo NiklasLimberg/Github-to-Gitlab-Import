@@ -61,7 +61,6 @@
 
 <script setup lang="ts">
 import { debouncedWatch } from '@vueuse/core'
-import axios from 'axios';
 
 interface SelectedOptions {
   repository: string[], 
@@ -72,18 +71,11 @@ interface SelectedOptions {
 }
 
 const searchTerm =  ref('repo:shopware/platform is:pr is:open')
-const { data: pullRequests }  = await useFetch('/api/pulls', { method: 'post', body: { q: searchTerm.value} })
+const { data: pullRequests, refresh: refreshList }  = await useFetch('/api/pulls', { method: 'post', body: { q: searchTerm.value} })
 
-async function fetchPRs() {
-    const response = await axios.post('/api/pulls', {
-        q: searchTerm.value
-    });
-
-    pullRequests.value = response.data;
-}
 
 debouncedWatch(searchTerm, async ()=> {
-    fetchPRs()
+    refreshList()
 }, { debounce: 100 })
 
 const repositoryOptions = useRepositoryOptions()
