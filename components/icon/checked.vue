@@ -20,6 +20,8 @@
 div {
     background-color: var(--icon-background-ready);
     padding: 10px;
+    border-radius: 6px;
+    line-height: 20px;
 }
 
 path {

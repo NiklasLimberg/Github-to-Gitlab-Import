@@ -7,7 +7,7 @@
       <icon-imported v-if="pullRequest.collapsedState === 'imported'" />
       <icon-review-failed v-if="pullRequest.collapsedState === 'review-failed'" />
       <icon-merge-conflicts v-if="pullRequest.collapsedState === 'merge-conflicts'" />
-      <icon-ready v-if="pullRequest.collapsedState === 'ready'" />
+      <icon-checked v-if="pullRequest.collapsedState === 'ready'" />
       <div>
         <div class="prTitle">
           {{ pullRequest.title }}

@@ -1,11 +1,11 @@
-import { Axios } from "axios";
+import  axios from "axios";
 import { mappings, mappingKeys } from "./mappings";
 
 export default class JiraAdapter {
-    #apiClient: Axios
+    #apiClient
 
     constructor(host: string, username: string, password: string) {
-        this.#apiClient = new Axios({
+        this.#apiClient = axios.create({
             baseURL: host,
             auth: {
                 username,
@@ -27,13 +27,13 @@ export default class JiraAdapter {
         return mappings[projectName as mappingKeys].jiraIssueKey
     }
 
-    async createTicket(projectName: string, user: {email: string, team: string}, pr: {author: string, description: string, htmlURL: string}) {
+    async createTicket(projectName: string, user: {email: string, team: string}, pr: {author: string, title: string, description: string, htmlURL: string}): Promise<string> {
         const description = `${pr.description}\n\n---\n\nImported from Github. Please see: ${pr.htmlURL}`
 
         // todo: maybe set the assignee
         const issueConfig = {
             fields: {
-                summary: "Main order flow broken",
+                summary: `[GitHub] ${pr.title}`,
                 description,
                 labels: [
                     "github",
@@ -54,8 +54,10 @@ export default class JiraAdapter {
         }
 
 
-        this.#apiClient.post('rest/api/3/issue', {
+        const jiraIssue = await this.#apiClient.post('rest/api/3/issue', {
             issueConfig
         })
+
+        return jiraIssue.data.key ?? ''
     }
 }

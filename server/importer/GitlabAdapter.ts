@@ -43,7 +43,7 @@ export default class GitlabAdapter {
             githubURL: string,
             localeBranchName: string
             projectName: string
-        }, labels: string[]) {
+        }, labels?: string[]) {
         // todo strip tags
         const description = `${pullRequest.description}\n\n> Jira: https://shopware.atlassian.net/browse/${pullRequest.jiraIssue}\n> Github-PR: ${pullRequest.githubURL}`
 

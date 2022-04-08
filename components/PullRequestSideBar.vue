@@ -9,13 +9,18 @@
         <span>{{ author.login }}</span>
       </div>
     </div>
-    <div v-if="assignee">
+    <div v-if="assignees">
       <span class="bold margin-top">
         Assignee
       </span>
       <div class="flex">
-        <icon-user :icon-path="assignee.avatarURL" />
-        <span>{{ assignee.login }}</span>
+        <template
+          v-for="assignee in assignees"
+          :key="assignee.login"
+        >
+          <icon-user :icon-path="assignee.avatarURL" />
+          <span>{{ assignee.login }}</span>
+        </template>
       </div>
     </div>
     <div>
@@ -41,7 +46,7 @@
 <script setup lang="ts">
 import type { User } from '~~/server/types/pullRequest'
 
-defineProps<{author: User, assignee?: User, reviewPassed: boolean, mergeable: boolean }>()
+defineProps<{author: User, assignees?: User[], reviewPassed: boolean, mergeable: boolean }>()
 </script>
 
 <style scoped>

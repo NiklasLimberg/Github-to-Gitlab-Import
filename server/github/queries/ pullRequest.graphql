@@ -35,14 +35,14 @@ query getPR($name: String!, $number: Int!) {
 query getPRForImport($name: String!, $number: Int!) {
   repository(owner: "shopware", name: $name) {
     pullRequest(number: $number) {
-      headRepository {
-        ref {
-          id
-        }
-      }
+      id
       repository {
         sshUrl
       }
+      headRef {
+        id
+      }
+      bodyText
       title
       url
       body
@@ -50,9 +50,14 @@ query getPRForImport($name: String!, $number: Int!) {
       author {
         login
       }
-      commits {
-         totalCount
-       }
+      commits(first: 1) {
+        nodes {
+          commit {
+            oid
+          }
+        }
+        totalCount
+      }
     }
   }
 } 

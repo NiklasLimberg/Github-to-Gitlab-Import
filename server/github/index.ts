@@ -1,5 +1,11 @@
 import { githubClient } from "./client";
-import { GetPRs, GetPRsQuery, GetPRsQueryVariables, GetPr, GetPrQuery, GetPrQueryVariables, GetPrForImport, GetPrForImportQuery, GetPrForImportQueryVariables  } from "./generated/graphql";
+import { 
+    GetPRs, GetPRsQuery, GetPRsQueryVariables,
+    GetPr, GetPrQuery, GetPrQueryVariables,
+    GetPrForImport, GetPrForImportQuery, GetPrForImportQueryVariables,
+    AddComment, AddCommentMutation, AddCommentMutationVariables,
+    AddPullRequestLabel, AddPullRequestLabelMutation, AddPullRequestLabelMutationVariables
+} from "./generated/graphql";
 
 export async function getPullRequests(query: string): Promise<GetPRsQuery> {
     const result = await githubClient().query<GetPRsQuery, GetPRsQueryVariables>({
@@ -28,6 +34,31 @@ export async function getPrInfoForImport(repositoryName: string, prNumber: numbe
         variables: {
             name: repositoryName, 
             number: prNumber
+        }
+    })
+
+    return result.data
+}
+
+export async function addComment(issueID: string, body: string): Promise<AddCommentMutation> {
+    const result = await githubClient().mutate<AddCommentMutation, AddCommentMutationVariables>({
+        mutation: AddComment, 
+        variables: {
+            issueID, 
+            body
+        }
+    })
+
+    return result.data
+}
+
+
+export async function addLabel(issueID: string, labelIds: string): Promise<AddPullRequestLabelMutation> {
+    const result = await githubClient().mutate<AddPullRequestLabelMutation, AddPullRequestLabelMutationVariables>({
+        mutation: AddPullRequestLabel, 
+        variables: {
+            issueID,
+            labelIds
         }
     })
 

@@ -18,7 +18,10 @@
             Github
           </button>
         </nuxt-link>
-        <button class="button-primary">
+        <button
+          class="button-primary"
+          @click="isEditingCommits = true"
+        >
           Import
         </button>
       </div>
@@ -29,7 +32,7 @@
       />
       <pull-request-side-bar
         :author="pullRequest.author"
-        :assignee="pullRequest.assignee"
+        :assignees="pullRequest.assignees"
         :review-passed="pullRequest.reviewDecision !== 'CHANGES_REQUESTED'"
         :mergeable="pullRequest.mergeable"
       />
@@ -51,7 +54,7 @@
       />
     </section>
     <modal-commits
-      :is-open="true"
+      :is-open="isEditingCommits"
       :original-commit-message="pullRequest.originalCommitMessage"
       :has-edits="overrides.size !== 0"
     />
@@ -60,12 +63,13 @@
 
 <script setup lang="ts">
 registerMonacoWorkers()
-
 interface File {
   path: string
   baseFile: string
   modifiedFile: string
 }
+
+const isEditingCommits = ref(false)
 
 const route = useRoute()
 const repositoryName = route.params.repository as string;
@@ -93,11 +97,10 @@ watch(pullRequest, async () => {
     )
 
     files.value = await Promise.all(pullRequest.value.files.map(file => getFile(file.path)))
-})
+}, { immediate: true })
 
 const overrides = new Map<string, string>()
 function fileOverride(path: string, override: string) {
-    console.log(override)
     if(override.length === 0) {
         overrides.delete(path)
         return
@@ -106,7 +109,6 @@ function fileOverride(path: string, override: string) {
 }
 
 </script>
-
 
 <style scoped>
 .header {
