@@ -35,7 +35,7 @@ export default class GitlabAdapter {
         return mappings[projectName as mappingKeys].gitlabProjectID
     }
 
-    async createGitlabMergeRequest(pullRequest: {
+    async createMergeRequest(pullRequest: {
             jiraIssue: string 
             title: string,
             description: string,  

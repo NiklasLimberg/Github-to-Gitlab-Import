@@ -14,6 +14,10 @@ import config from '#config'
 export default async (req: IncomingMessage, res: ServerResponse) => {
     const { repositoryName, prNumber, userOverwrites, overwritesMessage } = await useBody(req);
 
+    // user information for testing
+    const userEmail = 'n.limberg@shopware.com'
+    const userTeam = '12817'
+
     if(typeof repositoryName !== 'string' ||  repositoryName.length === 0) {
         return sendError(res, new H3Error('Option repositoryName need to be supplied'))
     }
@@ -45,7 +49,7 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
 
     outputStream.write(`Creating Ticket for ${githubPullRequest.title}`)
 
-    const issueKey = await jiraAdapter.createTicket(repositoryName, {email: 'n.limberg@shopware.com', team: '12817'}, {
+    const issueKey = await jiraAdapter.createTicket(repositoryName, {email: userEmail, team: userTeam}, {
         title: githubPullRequest.title,
         author: githubPullRequest.author?.login ?? '',
         description: githubPullRequest.body, 
@@ -55,23 +59,33 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
     outputStream.write('Checking out Github brach\n')
 
     const localBranch = `${issueKey}/auto-imported-from-github`
-    await gitClient.checkout({URL: githubPullRequest.repository.sshUrl, branch: localBranch, name: repositoryName}, githubPullRequest.headRef?.id ?? '')
+    await gitClient.checkout(
+        {
+            URL: githubPullRequest.repository.sshUrl,
+            branch: localBranch,
+            name: repositoryName
+        }, 
+        githubPullRequest.headRef?.id ?? ''
+    )
 
     outputStream.write('Squashing and renaming commits\n')
-    await gitClient.squashAndRenameCommits(issueKey, pullRequestNumber, githubPullRequest.commits?.nodes?.at(0)?.commit.oid, githubPullRequest.commits.totalCount > 1)
+    await gitClient.squashAndRenameCommits(issueKey, pullRequestNumber, 
+        githubPullRequest.commits?.nodes?.at(0)?.commit.oid, 
+        githubPullRequest.commits.totalCount > 1
+    )
 
     if(Array.isArray(userOverwrites)) {
         const overwrites = userOverwrites.join('\n\n').replaceAll('${issueKey}', issueKey)
         console.log(overwrites)
 
-        gitClient.applyPatch(overwrites, overwritesMessage, 'n.limberg@shopware.com')
+        gitClient.applyPatch(overwrites, overwritesMessage, userEmail)
     }
 
     outputStream.write('Pushing branch to gitlab\n')
     await gitClient.pushBranch(repositoryName, localBranch)
 
     outputStream.write('Creating Gitlab Merge Request\n')
-    await gitlabClient.createGitlabMergeRequest({
+    await gitlabClient.createMergeRequest({
         jiraIssue: issueKey,
         title: githubPullRequest.title,
         description: githubPullRequest.body,
@@ -82,12 +96,16 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
     })
 
     outputStream.write('Adding Comment to github pull request\n')
-    await addComment(githubPullRequest.id, `Hello,\nthank you for creating this pull request.\nI have opened an issue on our Issue Tracker for you. See the issue link: ${issueKey}\nPlease use this issue to track the state of your pull request.`)
+    await addComment(githubPullRequest.id, getCommentMessage(issueKey))
 
     outputStream.write('Adding Label to github pull request\n')
     await addLabel(githubPullRequest.id, 'Scheduled')
 
     outputStream.end('Import Complete!')
+}
+
+function getCommentMessage(issueKey: string) {
+    return `Hello,\nthank you for creating this pull request.\nI have opened an issue on our Issue Tracker for you. See the issue link: ${issueKey}\nPlease use this issue to track the state of your pull request.`
 }
 
 async function getPRfromGithub(repositoryName: string, pullRequestNumber: number) {
