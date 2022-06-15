@@ -11,7 +11,7 @@
     "esModuleInterop": true,
     "lib": ["esnext", "dom"],
     "baseUrl": "./",
-    "types": ["@types/resize-observer-browser"],
+    "types": ["@types/resize-observer-browser", "jest"],
   },
   "files": ["./index.d.ts"],
   "extends": "./.nuxt/tsconfig.json"

@@ -36,12 +36,9 @@
 
     // status-emerald ´
     --status-emerald-50: #E7F9E9;
-    
     --status-emerald-500: #37D046;
 
-    --border-width: 1px;
-
-
+    // text styles
     --headline-small: normal 700 18px/22px 'Inter';
     --text-large: normal 700 32px/24px  'Inter';
     --text-bold: normal 700 16px/19px 'Inter'
@@ -50,14 +47,35 @@
     --text-secondary: normal 400 14px/18px 'Inter';
     --text-small: normal 400 12px/15px 'Inter';
 
+    // units
+    --border-width: 1px;
     --default-unit: 8px;
     --default-border-radius: 6px;
 }
 
 body {
+    --text-color: var(--neutrals-dark-gray-800);
+    --background-page-color: var(--neutrals-gray-50);
+    --background-color: var(--neutrals-white);
+    --background-hover-color: var(--neutrals-gray-200);
+    --border-color: var(--neutrals-gray-400);
+    --default-border: 1px solid var(--border-color);
+    --check-mark-fill: var(--neutrals-gray-500);
+    --default-label-color: var(--neutrals-gray-100);
+    --small-text-color: var(--neutrals-dark-gray-300);
+    // ---- ///
 }
 body.dark-theme {
- 
+    --text-color: var(--neutrals-gray-50);
+    --background-page-color: var(--neutrals-dark-gray-900);
+    --background-color: var(--neutrals-dark-gray-800);
+    --background-hover-color: var(--neutrals-dark-gray-500);
+    --border-color: var(--neutrals-dark-gray-400);
+    --default-border: 1px solid var(--border-color);
+    --check-mark-fill: var(--neutrals-dark-gray-200);
+    --default-label-color: var(--neutrals-dark-gray-600);
+    --small-text-color: var(--neutrals-gray-500);
+    // ---- ///
 }
 
 /* defaults for dark theme */
@@ -72,12 +90,7 @@ body.dark-theme {
         --check-mark-fill: var(--neutrals-dark-gray-200);
         --default-label-color: var(--neutrals-dark-gray-600);
         --small-text-color: var(--neutrals-gray-500);
-
-        --icon-background-imported: var(--neutrals-dark-gray-600);
-        --icon-background-ready: #0F3D14;
-        --icon-background-update: #002C4D;
-        --icon-background-review-failed: #4D2F00;
-        --icon-background-pipeline-failed: #4B0C1A;
+        // ---- ///
     }
 
     body.light-theme {
@@ -90,12 +103,7 @@ body.dark-theme {
         --check-mark-fill: var(--neutrals-gray-500);
         --default-label-color: var(--neutrals-gray-100);
         --small-text-color: var(--neutrals-dark-gray-300);
-
-        --icon-background-imported: var(--neutrals-gray-100);
-        --icon-background-ready: var(--status-emerald-50);
-        --icon-background-update: var(--vivacious-50);
-        --icon-background-review-failed: var(--status-pumpkin-spice-50);
-        --icon-background-pipeline-failed: var(--status-crimson-50);
+        // ---- ///
     }
 }
 
