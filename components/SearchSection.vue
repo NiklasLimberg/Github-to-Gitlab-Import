@@ -43,8 +43,6 @@
 </template>
 
 <script setup lang="ts">
-import {withDefaults, defineProps, defineEmits, computed} from 'vue'
-
 const props = withDefaults(defineProps<{modelValue: string}>(), {
     modelValue: ''
 })
@@ -110,8 +108,12 @@ const selectedOptions = computed(() => {
     return selection
 })
 
+function escapeRegExp(string: string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
+
 function toggleSelection(selection: string, kind: 'repo' | 'author' | 'assignee' | 'label' | 'review') {
-    const option = `${kind}:${selection}`
+    const option = escapeRegExp(`${kind}:${selection}`)
 
     const regex = new RegExp(` *${option} *`, 'g')
 
